@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<PackageId>Schedules.Nuget.Abstractions</PackageId>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Title>Schedules.Nuget.Abstractions</Title>
+		<PackageProjectUrl>https://github.com/TkachukOleksandr/Schedules.Nuget/Schedules.Nuget.Abstractions</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/TkachukOleksandr/Schedules.Nuget/Schedules.Nuget.Abstractions</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<IncludeSymbols>true</IncludeSymbols>
+		<IncludeSource>true</IncludeSource>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<Deterministic>true</Deterministic>
+	</PropertyGroup>
+</Project>

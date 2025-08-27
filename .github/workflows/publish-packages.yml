@@ -1,0 +1,51 @@
+name: Publish NuGet Package
+
+on:
+  push:
+    tags:
+      - 'abstractions-*'
+      - 'database-*'
+      - 'enums-*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Detect package and version
+        run: |
+          if [[ "${GITHUB_REF_NAME}" == abstractions-* ]]; then
+            echo "PACKAGE_NAME=Schedules.Nuget.Abstractions" >> $GITHUB_ENV
+            echo "VERSION=${GITHUB_REF_NAME#abstractions-}" >> $GITHUB_ENV
+          elif [[ "${GITHUB_REF_NAME}" == database-* ]]; then
+            echo "PACKAGE_NAME=Schedules.Nuget.Database" >> $GITHUB_ENV
+            echo "VERSION=${GITHUB_REF_NAME#database-}" >> $GITHUB_ENV
+          elif [[ "${GITHUB_REF_NAME}" == enums-* ]]; then
+            echo "PACKAGE_NAME=Schedules.Nuget.Enums" >> $GITHUB_ENV
+            echo "VERSION=${GITHUB_REF_NAME#enums-}" >> $GITHUB_ENV
+          else
+            echo "Unknown tag format: ${GITHUB_REF_NAME}"
+            exit 1
+          fi
+
+      - name: Build
+        run: dotnet build --configuration Release
+
+      - name: Pack
+        run: >
+          dotnet pack --no-restore --no-build --configuration Release
+          -p:PackageVersion=${{ env.VERSION }}
+          --output .
+
+      - name: Publish
+        run: >
+          dotnet nuget push ${{ env.PACKAGE_NAME }}.${{ env.VERSION }}.nupkg
+          -s https://nuget.pkg.github.com/TkachukOleksandr/index.json
+          -k ${{ secrets.NUGET_AUTH_TOKEN }}
